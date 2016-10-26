@@ -11,7 +11,8 @@ class HTTPResponse:
     }
 
     def __init__(self,
-                 body='',
+                 body=b'',
+                 text='',
                  content_type='text/html; chardet=utf-8;',
                  status=200,
                  headers=None
@@ -23,6 +24,13 @@ class HTTPResponse:
         self.status = status
         self.version = "1.1"
         self.upgrade = None # Websocket needed
+
+        if type(body) != bytes:
+            raise TypeError("Body must be bytes")
+
+        self.body = body
+
+        self._add_default_headers()
 
     def set_cookie(self, key, value):
         self.headers['Set-Cookie'] = self.headers.get('Set-Cookie', '') + "%s=%s;" % (key, value)
@@ -81,8 +89,8 @@ class HTTPResponse:
 
         self.headers['Server'] = self.server_version
 
-    def repr(self):
-        pass
+    def head(self):
+
 
 
 
